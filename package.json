@@ -1,0 +1,62 @@
+{
+  "name": "cloudscape-ui",
+  "version": "1.1.0",
+  "description": "Portable CSS tokens and React components inspired by the OneDrive home screen.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens.css": "./tokens.css",
+    "./components.css": "./components.css",
+    "./tokens.json": "./tokens.json",
+    "./tokens.dark.json": "./tokens.dark.json"
+  },
+  "files": [
+    "dist",
+    "react",
+    "tokens.css",
+    "tokens.json",
+    "tokens.dark.json",
+    "components.css",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.txt"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "tokens": "node scripts/build-tokens.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/data.test.ts tests/theme.test.ts && node --test tests/packaging.test.mjs",
+    "build": "npm run tokens && npm run typecheck && esbuild react/index.tsx --bundle --external:react --format=esm --outfile=dist/index.js && tsc -p tsconfig.lib.json && vite build --base=./ --outDir preview && node scripts/build-standalone.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=18 <21",
+    "react-dom": ">=18 <21"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claudio-mas/cloudscape-ui.git"
+  },
+  "homepage": "https://github.com/claudio-mas/cloudscape-ui#readme",
+  "bugs": {
+    "url": "https://github.com/claudio-mas/cloudscape-ui/issues"
+  }
+}

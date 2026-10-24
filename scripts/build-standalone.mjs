@@ -1,0 +1,10 @@
+import { build } from 'esbuild';
+import { readFile, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+const root = new URL('../',import.meta.url);
+const result = await build({ entryPoints:[fileURLToPath(new URL('../demo/main.tsx',import.meta.url))], bundle:true, write:false, format:'iife', platform:'browser', minify:true, jsx:'automatic', loader:{'.css':'empty'}, define:{'process.env.NODE_ENV':'"production"'} });
+const css = (await Promise.all(['tokens.css','components.css','demo/catalog.css'].map(name=>readFile(new URL(name,root),'utf8')))).join('\n');
+const js=result.outputFiles[0].text.replace(/<\/script/gi,'<\\/script');
+const html=`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cloudscape — Design system</title><style>body{margin:0}${css}</style></head><body><div id="root"></div><script>${js}</script></body></html>`;
+await writeFile(new URL('DEMO.html',root),html);
+console.log('Standalone DEMO.html generated.');
