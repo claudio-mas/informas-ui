@@ -1,0 +1,40 @@
+name: Release
+
+# Publica um release no GitHub ao enviar uma tag vX.Y.Z (ou vX.Y.Z-alpha.N).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Conferir versão da tag
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          test "v$version" = "$GITHUB_REF_NAME" || { echo "Tag $GITHUB_REF_NAME diferente de package.json ($version)"; exit 1; }
+
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm pack
+
+      - name: Criar release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha256sum informas-ui-*.tgz > SHA256SUMS
+          prerelease=""
+          case "$GITHUB_REF_NAME" in *-*) prerelease="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" informas-ui-*.tgz SHA256SUMS \
+            --title "informas-ui $GITHUB_REF_NAME" --generate-notes $prerelease
