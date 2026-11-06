@@ -6,3 +6,19 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+site/dist/
+site/public/demo.html
+.impeccable/review/
+
+# Saídas do build: geradas pela CI e anexadas aos releases, nunca versionadas.
+dist/
+preview/
+DEMO.html
+*.tgz
+SHA256SUMS
+# Manifesto da 1.1.0 (substituído pelo SHA256SUMS dos releases).
+/MANIFEST.sha256
+
+# Skills instaladas (inclui binários). Restaure a partir de skills-lock.json.
+.claude/skills/
+.claude/settings.local.json

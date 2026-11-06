@@ -1,62 +1,72 @@
 {
-  "name": "cloudscape-ui",
-  "version": "1.1.0",
-  "description": "Portable CSS tokens and React components inspired by the OneDrive home screen.",
+  "name": "informas-ui",
+  "version": "2.0.0-alpha.0",
+  "description": "Base neutra de design system para aplicações web comerciais/SaaS: tokens semânticos no padrão shadcn/ui, tema para Tailwind CSS v4 e verificação de contraste WCAG.",
   "type": "module",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "keywords": ["design-system", "design-tokens", "tailwindcss", "shadcn", "css-variables", "wcag"],
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./tokens.css": "./tokens.css",
-    "./components.css": "./components.css",
-    "./tokens.json": "./tokens.json",
-    "./tokens.dark.json": "./tokens.dark.json"
+    "./theme.css": "./dist/theme.css",
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./themes/*": "./themes/*",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "informas-contrast": "./scripts/check-contrast.mjs"
   },
   "files": [
-    "dist",
-    "react",
-    "tokens.css",
-    "tokens.json",
-    "tokens.dark.json",
-    "components.css",
-    "README.md",
-    "LICENSE",
-    "THIRD_PARTY_NOTICES.txt"
+    "dist/theme.css",
+    "dist/tokens.css",
+    "dist/tokens.json",
+    "tokens",
+    "themes",
+    "scripts/check-contrast.mjs",
+    "scripts/lib",
+    "CHANGELOG.md"
   ],
   "sideEffects": [
     "*.css"
   ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "tokens": "node scripts/build-tokens.mjs",
-    "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/data.test.ts tests/theme.test.ts && node --test tests/packaging.test.mjs",
-    "build": "npm run tokens && npm run typecheck && esbuild react/index.tsx --bundle --external:react --format=esm --outfile=dist/index.js && tsc -p tsconfig.lib.json && vite build --base=./ --outDir preview && node scripts/build-standalone.mjs"
+    "build": "npm run build:tokens && npm run build:legacy",
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "test": "npm run build:tokens && node --test \"tests/*.test.mjs\" && npm run test:legacy",
+    "prepack": "npm run build:tokens",
+    "dev:legacy": "vite legacy --host 127.0.0.1",
+    "build:legacy": "node legacy/scripts/build-tokens.mjs && tsc -p legacy/tsconfig.json && esbuild legacy/react/index.tsx --bundle --external:react --format=esm --outfile=legacy/dist/index.js && tsc -p legacy/tsconfig.lib.json && vite build legacy --base=./ --outDir preview --emptyOutDir && node legacy/scripts/build-standalone.mjs",
+    "test:legacy": "tsx --test legacy/tests/data.test.ts legacy/tests/theme.test.ts && node --test legacy/tests/packaging.test.mjs"
   },
   "peerDependencies": {
-    "react": ">=18 <21",
-    "react-dom": ">=18 <21"
+    "tailwindcss": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@tailwindcss/node": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "esbuild": "^0.28.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.5"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/claudio-mas/cloudscape-ui.git"
+    "url": "git+https://github.com/claudio-mas/informas-ui.git"
   },
-  "homepage": "https://github.com/claudio-mas/cloudscape-ui#readme",
+  "homepage": "https://github.com/claudio-mas/informas-ui#readme",
   "bugs": {
-    "url": "https://github.com/claudio-mas/cloudscape-ui/issues"
+    "url": "https://github.com/claudio-mas/informas-ui/issues"
   }
 }

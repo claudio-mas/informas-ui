@@ -1,0 +1,29 @@
+/*
+ * Exemplo de tema de marca (fictícia) sobre o informas-ui.
+ *
+ * Copie este arquivo para o seu projeto como brand.css e importe-o DEPOIS do tema:
+ *   @import "tailwindcss";
+ *   @import "informas-ui/theme.css";
+ *   @import "./brand.css";
+ *
+ * Regras:
+ * - Sobrescreva só tokens semânticos (--primary, --ring, --radius…) ou escalas primitivas (--informas-neutral-*).
+ * - :root vale para os dois temas. Tudo o que for declarado só em :root também aparece no tema escuro,
+ *   porque este arquivo vem depois do .dark do tema base. Declare em .dark o que precisar mudar no escuro.
+ * - Valide com: npx informas-contrast src/brand.css
+ */
+
+:root {
+  --primary: oklch(0.48 0.09 185);
+  --primary-foreground: var(--informas-neutral-0);
+  --ring: var(--primary);
+  --chart-1: var(--primary);
+
+  --radius: 0.75rem;
+  --font-family-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark {
+  --primary: oklch(0.78 0.1 185);
+  --primary-foreground: var(--informas-neutral-950);
+}

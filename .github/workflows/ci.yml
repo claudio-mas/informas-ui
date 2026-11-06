@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build e testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+      # Inclui a verificação de contraste: um par abaixo do mínimo WCAG reprova o build.
+      - run: npm test
+      - run: npm pack
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: informas-ui-pacote
+          path: informas-ui-*.tgz
+          if-no-files-found: error
