@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseColor } from '../scripts/lib/color.mjs';
-import { cssBlocks, loadTokens, renderOutputs, resolveVar, semanticColorNames, themeVars } from '../scripts/lib/tokens.mjs';
+import { cssBlocks, loadTokens, resolveVar, semanticColorNames, themeVars } from '../scripts/lib/tokens.mjs';
 
 const SHADCN = ['background', 'foreground', 'card', 'card-foreground', 'popover', 'popover-foreground', 'primary', 'primary-foreground', 'secondary', 'secondary-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground', 'destructive', 'border', 'input', 'ring', 'chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5', 'sidebar', 'sidebar-foreground', 'sidebar-primary', 'sidebar-primary-foreground', 'sidebar-accent', 'sidebar-accent-foreground', 'sidebar-border', 'sidebar-ring'];
 
@@ -41,16 +41,4 @@ test('tema claro e escuro precisam ter os mesmos tokens', () => {
   const broken = structuredClone(loadTokens());
   delete broken.semantic.dark.muted;
   assert.throws(() => cssBlocks(broken), /dark\.muted/);
-});
-
-test('theme.css expõe os tokens ao Tailwind e usa .dark para o tema escuro', () => {
-  const { themeCss, tokensCss, tokensJson } = renderOutputs(undefined, '9.9.9');
-  assert.match(themeCss, /@custom-variant dark \(&:where\(\.dark, \.dark \*\)\);/);
-  assert.match(themeCss, /@theme inline \{[\s\S]*--color-primary: var\(--primary\);/);
-  assert.match(themeCss, /--font-sans: var\(--font-family-sans\);/);
-  assert.match(tokensCss, /^\.dark \{$/m);
-  assert.doesNotMatch(tokensCss, /@theme|@custom-variant/, 'tokens.css deve ser CSS puro, sem diretivas do Tailwind');
-  const json = JSON.parse(tokensJson);
-  assert.equal(json.version, '9.9.9');
-  assert.match(json.dark.background, /^#[0-9a-f]{6}$/);
 });

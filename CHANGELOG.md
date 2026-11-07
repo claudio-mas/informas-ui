@@ -4,6 +4,18 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 
 ## [Não lançado]
 
+## [2.0.0-alpha.1] — registro shadcn
+
+A distribuição passa a ser **só pelo registro shadcn**, hospedado nos assets dos releases do GitHub.
+
+### Adicionado
+- Item `@informas/tema` (`registry:theme`): primitivas `--informas-*`, tokens semânticos em `:root`/`.dark`, mapeamento explícito `@theme inline` (cores, raios `sm` a `4xl`, fontes) e estilos base.
+- Item `@informas/contraste`: `scripts/informas-contrast.mjs`, script único sem dependências que verifica o CSS do próprio projeto. Sem argumentos, lê o CSS do `components.json`.
+- Teste de instalação com o CLI real do shadcn (instala, compila com Tailwind, verifica contraste e confirma que atualizar preserva a marca no fim do CSS).
+
+### Removido
+- **Breaking:** o pacote npm. Saem os exports `informas-ui/theme.css`, `tokens.css`, `tokens.json` e o bin `informas-contrast`. O release não anexa mais `.tgz`.
+
 ## [2.0.0-alpha.0] — fundação
 
 O projeto passa a se chamar **informas-ui** e deixa de ser um kit inspirado no OneDrive para ser uma base neutra de design system para aplicações SaaS, em que cada aplicação aplica a própria marca.
@@ -28,6 +40,7 @@ O projeto passa a se chamar **informas-ui** e deixa de ser um kit inspirado no O
 
 Última versão com o nome `cloudscape-ui`. Tokens `--cs-*`, 18 componentes React, temas Claro/Escuro/Sistema. Código preservado em `legacy/` e na tag `v1.1.0`.
 
-[Não lançado]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.0...HEAD
+[Não lançado]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.1...HEAD
+[2.0.0-alpha.1]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.0...v2.0.0-alpha.1
 [2.0.0-alpha.0]: https://github.com/claudio-mas/informas-ui/compare/v1.1.0...v2.0.0-alpha.0
 [1.1.0]: https://github.com/claudio-mas/informas-ui/releases/tag/v1.1.0
