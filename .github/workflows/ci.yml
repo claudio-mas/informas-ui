@@ -22,12 +22,12 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      # Inclui a verificação de contraste: um par abaixo do mínimo WCAG reprova o build.
+      # Inclui a verificação de contraste (um par abaixo do mínimo WCAG reprova o build)
+      # e a instalação real dos itens com o CLI do shadcn (tests/shadcn.test.mjs).
       - run: npm test
-      - run: npm pack
 
       - uses: actions/upload-artifact@v7
         with:
-          name: informas-ui-pacote
-          path: informas-ui-*.tgz
+          name: informas-ui-registro
+          path: dist/r/
           if-no-files-found: error

@@ -1,16 +1,15 @@
 /*
- * Exemplo de tema de marca (fictícia) sobre o informas-ui.
+ * Exemplo de marca (fictícia) sobre o tema do informas-ui.
  *
- * Copie este arquivo para o seu projeto como brand.css e importe-o DEPOIS do tema:
- *   @import "tailwindcss";
- *   @import "informas-ui/theme.css";
- *   @import "./brand.css";
+ * Depois de `npx shadcn@latest add @informas/tema`, cole estes blocos no FIM do globals.css,
+ * abaixo das variáveis do tema. Ficando por último, vencem na cascata; e o CLI do shadcn,
+ * ao atualizar o tema, altera o primeiro :root/.dark e mantém este bloco no fim.
  *
  * Regras:
  * - Sobrescreva só tokens semânticos (--primary, --ring, --radius…) ou escalas primitivas (--informas-neutral-*).
- * - :root vale para os dois temas. Tudo o que for declarado só em :root também aparece no tema escuro,
- *   porque este arquivo vem depois do .dark do tema base. Declare em .dark o que precisar mudar no escuro.
- * - Valide com: npx informas-contrast src/brand.css
+ * - O que estiver só em :root também vale no tema escuro, porque este bloco vem depois do .dark do tema.
+ *   Declare em .dark o que precisar mudar no escuro.
+ * - Valide com: node scripts/informas-contrast.mjs (item @informas/contraste).
  */
 
 :root {

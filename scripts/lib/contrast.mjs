@@ -14,6 +14,7 @@ export function parseThemeCss(css, file = 'CSS') {
   const clean = css.replace(/\/\*[\s\S]*?\*\//g, '');
   for (const [, rawSelector, body] of clean.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
     const selector = rawSelector.trim();
+    if (selector.startsWith('@')) continue; // @theme inline, @layer… não definem os tokens
     const decls = [...body.matchAll(/(--[\w-]+)\s*:\s*([^;]+?)\s*(?:;|$)/g)].map(([, name, value]) => [name, value.replace(/\s*!important$/, '')]);
     if (!decls.length) continue;
     const parts = selector.split(',').map(s => s.trim());
@@ -32,15 +33,8 @@ function background(vars, mode) {
   return color ? composite(color, fallback) : fallback;
 }
 
-export function checkContrast({ files = [], tokens = loadTokens() } = {}) {
-  const blocks = cssBlocks(tokens);
-  const warnings = [];
-  for (const file of files) {
-    const parsed = parseThemeCss(readFileSync(file, 'utf8'), file);
-    blocks.push(...parsed.blocks);
-    warnings.push(...parsed.warnings);
-  }
-  const { minimums, pairs } = tokens.contrast;
+/** Verifica os pares sobre uma sequência de blocos já na ordem da cascata. */
+export function evaluate(blocks, { minimums, pairs }) {
   const results = [];
   for (const mode of ['light', 'dark']) {
     const vars = themeVars(blocks, mode);
@@ -62,7 +56,32 @@ export function checkContrast({ files = [], tokens = loadTokens() } = {}) {
       results.push({ ...base, ratio, ok: ratio >= min, fgHex: toHex(fg), bgHex: toHex(bgRaw) });
     }
   }
+  return results;
+}
+
+function readFiles(files) {
+  const blocks = [];
+  const warnings = [];
+  for (const file of files) {
+    const parsed = parseThemeCss(readFileSync(file, 'utf8'), file);
+    blocks.push(...parsed.blocks);
+    warnings.push(...parsed.warnings);
+  }
+  return { blocks, warnings };
+}
+
+/** Só os arquivos CSS do projeto (o tema já foi copiado para eles pelo registro). */
+export function checkCss({ files, contrast }) {
+  const { blocks, warnings } = readFiles(files);
+  const results = evaluate(blocks, contrast);
   return { results, warnings, failures: results.filter(r => !r.ok) };
+}
+
+/** Tokens base do repositório, com arquivos de marca opcionais por cima. */
+export function checkContrast({ files = [], tokens = loadTokens() } = {}) {
+  const extra = readFiles(files);
+  const results = evaluate([...cssBlocks(tokens), ...extra.blocks], tokens.contrast);
+  return { results, warnings: extra.warnings, failures: results.filter(r => !r.ok) };
 }
 
 export function formatReport({ results, warnings, failures }) {

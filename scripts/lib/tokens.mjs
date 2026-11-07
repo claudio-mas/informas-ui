@@ -48,32 +48,6 @@ export function cssBlocks(tokens = loadTokens()) {
 
 export const semanticColorNames = (tokens = loadTokens()) => Object.keys(tokens.semantic.light);
 
-const block = ({ selector, decls }) => `${selector} {\n${decls.map(([name, value]) => `  ${name}: ${value};`).join('\n')}\n}\n`;
-
-export function renderOutputs(tokens = loadTokens(), version = '0.0.0') {
-  const header = `/* informas-ui ${version} — gerado por scripts/build-tokens.mjs a partir de tokens/*.json. Não edite. */\n`;
-  const blocks = cssBlocks(tokens).map(block).join('\n');
-  const colors = semanticColorNames(tokens).map(name => `  --color-${name}: var(--${name});`).join('\n');
-  const themeCss = `${header}
-/* Tema escuro pela classe .dark (padrão shadcn/ui). */
-@custom-variant dark (&:where(.dark, .dark *));
-
-${blocks}
-@theme inline {
-${colors}
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  --font-sans: var(--font-family-sans);
-  --font-mono: var(--font-family-mono);
-}
-`;
-  return { tokensCss: `${header}\n${blocks}`, themeCss, tokensJson: `${JSON.stringify(resolvedJson(tokens, version), null, 2)}\n` };
-}
-
 /** Resolve var(--x) recursivamente num mapa de variáveis CSS. */
 export function resolveVar(name, vars, seen = new Set()) {
   if (seen.has(name)) throw new Error(`Referência circular em ${[...seen, name].join(' → ')}`);
@@ -89,13 +63,4 @@ export function themeVars(blocks, mode) {
     if (selector === ':root' || (mode === 'dark' && selector === '.dark')) for (const [name, value] of decls) vars.set(name, value);
   }
   return vars;
-}
-
-function resolvedJson(tokens, version) {
-  const blocks = cssBlocks(tokens);
-  const resolveTheme = mode => {
-    const vars = themeVars(blocks, mode);
-    return Object.fromEntries(semanticColorNames(tokens).map(name => [name, resolveVar(`--${name}`, vars)]));
-  };
-  return { name: 'informas-ui', version, primitives: tokens.primitives, shared: tokens.semantic.shared, light: resolveTheme('light'), dark: resolveTheme('dark') };
 }
