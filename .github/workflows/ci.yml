@@ -25,9 +25,21 @@ jobs:
       # Inclui a verificação de contraste (um par abaixo do mínimo WCAG reprova o build)
       # e a instalação real dos itens com o CLI do shadcn (tests/shadcn.test.mjs).
       - run: npm test
+      - run: npx playwright install --with-deps chromium
+      # Catálogo com axe (WCAG 2.1 AA) nos dois temas e com as sobreposições abertas.
+      - run: npm run test:browser
 
       - uses: actions/upload-artifact@v7
         with:
           name: informas-ui-registro
           path: dist/r/
           if-no-files-found: error
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: catalogo-capturas
+          path: |
+            .test-work/capturas/
+            .test-work/playwright/
+          if-no-files-found: ignore

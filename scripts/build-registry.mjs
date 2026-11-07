@@ -2,7 +2,7 @@
 import { build } from 'esbuild';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { contrastItem, registryIndex, themeItem } from './lib/registry.mjs';
+import { componentItems, contrastItem, registryIndex, themeItem } from './lib/registry.mjs';
 
 const root = new URL('../', import.meta.url);
 const { version } = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));
@@ -16,11 +16,11 @@ const bundle = await build({
 });
 const script = bundle.outputFiles[0].text.replace(/^#!.*\n(?=#!)/, '');
 
-const items = [themeItem(undefined, version), contrastItem(script, version)];
+const items = [themeItem(undefined, version), contrastItem(script, version), ...componentItems(version)];
 const out = new URL('dist/r/', root);
 await mkdir(out, { recursive: true });
 await Promise.all([
   ...items.map(item => writeFile(new URL(`${item.name}.json`, out), `${JSON.stringify(item, null, 2)}\n`)),
   writeFile(new URL('registry.json', out), `${JSON.stringify(registryIndex(items, version), null, 2)}\n`),
 ]);
-console.log(`informas-ui ${version}: registro em dist/r/ (${items.map(i => i.name).join(', ')}, registry.json)`);
+console.log(`informas-ui ${version}: ${items.length} itens em dist/r/ + registry.json`);

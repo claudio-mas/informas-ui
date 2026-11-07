@@ -1,0 +1,32 @@
+{
+  "$comment": "Verificação de tipos dos itens do registro e do catálogo. A v1 tem o próprio tsconfig em legacy/.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": [],
+    "paths": {
+      "@/registry/*": [
+        "./registry/*"
+      ]
+    }
+  },
+  "include": [
+    "registry",
+    "catalog"
+  ],
+  "exclude": [
+    "catalog/vite.config.ts"
+  ]
+}
