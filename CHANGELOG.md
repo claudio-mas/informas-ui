@@ -4,6 +4,29 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 
 ## [Não lançado]
 
+## [2.0.0-alpha.3] — foco da gaveta
+
+### Corrigido
+- `sidebar`: ao fechar a gaveta do celular, o foco volta ao botão que a abriu, ou ao elemento focado antes do atalho Ctrl/Cmd+B. No shadcn/ui original ele cai no `<body>`, porque o `Sheet` da barra lateral não tem `Dialog.Trigger` (WCAG 2.4.3). `useSidebar()` expõe `returnFocusRef`.
+- `app-shell`: a gaveta do celular fecha ao seguir um link. Em layouts persistentes (Next.js) ela ficava aberta sobre a nova página.
+
+## [2.0.0-alpha.2] — primeiro lote de componentes
+
+### Adicionado
+- 30 componentes no registro, a partir do shadcn/ui (CLI 4.21, estilo new-york, Radix):
+  - formulários: `button`, `input`, `textarea`, `label`, `field`, `native-select`, `select`, `checkbox`, `radio-group`, `switch`;
+  - feedback e conteúdo: `alert`, `badge`, `card`, `skeleton`, `empty`, `separator`, `tabs`;
+  - sobreposições: `dialog`, `alert-dialog`, `dropdown-menu`, `popover`, `tooltip`, `sheet`, `sonner`;
+  - dados e navegação: `table`, `data-table`, `pagination`, `breadcrumb`, `sidebar`, `theme-switcher`.
+- Apoio: `theme-mode` (`themeScript()`, `setThemePreference()`, `useResolvedTheme()`) e `use-mobile`.
+- Bloco `app-shell`.
+- Ajustes aos tokens e à acessibilidade: foco sólido de 2 px, destrutivo com `destructive-foreground`, campos sem tingimento por `input`, `Alert` e `Badge` com estados, `role` do `Alert` por gravidade, `Toaster` sem `next-themes`, `Sidebar` sem `cssVars` próprios, textos em pt-BR.
+- `DataTable` sobre o TanStack Table 9, com `aria-sort`, busca sem acentos, ordenação numérica com negativos e paginação em pt-BR.
+- Dependências npm e entre itens derivadas dos imports no build.
+- Catálogo de componentes (`npm run dev:catalog`) e testes de navegador com axe (WCAG 2.1 AA), nos dois temas e com sobreposições abertas, também na CI.
+- Teste que instala todos os componentes com o CLI real num projeto com outros aliases e o compila com TypeScript.
+
+
 ## [2.0.0-alpha.1] — registro shadcn
 
 A distribuição passa a ser **só pelo registro shadcn**, hospedado nos assets dos releases do GitHub.
@@ -40,7 +63,9 @@ O projeto passa a se chamar **informas-ui** e deixa de ser um kit inspirado no O
 
 Última versão com o nome `cloudscape-ui`. Tokens `--cs-*`, 18 componentes React, temas Claro/Escuro/Sistema. Código preservado em `legacy/` e na tag `v1.1.0`.
 
-[Não lançado]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.1...HEAD
+[Não lançado]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.3...HEAD
+[2.0.0-alpha.3]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
+[2.0.0-alpha.2]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
 [2.0.0-alpha.1]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.0...v2.0.0-alpha.1
 [2.0.0-alpha.0]: https://github.com/claudio-mas/informas-ui/compare/v1.1.0...v2.0.0-alpha.0
 [1.1.0]: https://github.com/claudio-mas/informas-ui/releases/tag/v1.1.0

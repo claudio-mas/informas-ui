@@ -22,3 +22,6 @@ SHA256SUMS
 # Skills instaladas (inclui binários). Restaure a partir de skills-lock.json.
 .claude/skills/
 .claude/settings.local.json
+
+# Catálogo: CSS gerado a partir do tema
+catalog/globals.gerado.css

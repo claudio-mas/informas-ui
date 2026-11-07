@@ -1,0 +1,45 @@
+{
+  "$description": "Itens de componentes do registro informas. Dependências npm e entre itens são derivadas dos imports pelo scripts/build-registry.mjs.",
+  "items": [
+    { "name": "theme-mode", "type": "registry:lib", "title": "Modo de tema", "description": "Claro/Escuro/Sistema pela classe .dark: themeScript() para o layout, setThemePreference() e useResolvedTheme().", "files": ["lib/theme-mode.ts"],
+      "docs": "Coloque o themeScript() antes da hidratação. Next.js: <Script id=\"tema\" strategy=\"beforeInteractive\">{themeScript()}</Script> no layout raiz (import Script from \"next/script\"). Vite: o conteúdo de themeScript() num <script> no <head> do index.html." },
+    { "name": "use-mobile", "type": "registry:hook", "title": "useIsMobile", "description": "Diz se a largura está abaixo de 768 px.", "files": ["hooks/use-mobile.ts"] },
+
+    { "name": "button", "type": "registry:ui", "title": "Button", "description": "Botão com variantes default, destructive, outline, secondary, ghost e link.", "files": ["ui/button.tsx"] },
+    { "name": "input", "type": "registry:ui", "title": "Input", "description": "Campo de texto.", "files": ["ui/input.tsx"] },
+    { "name": "textarea", "type": "registry:ui", "title": "Textarea", "description": "Campo de texto com várias linhas.", "files": ["ui/textarea.tsx"] },
+    { "name": "label", "type": "registry:ui", "title": "Label", "description": "Rótulo de campo.", "files": ["ui/label.tsx"] },
+    { "name": "field", "type": "registry:ui", "title": "Field", "description": "Campo completo: rótulo, descrição, erro, grupos e fieldsets.", "files": ["ui/field.tsx"] },
+    { "name": "native-select", "type": "registry:ui", "title": "NativeSelect", "description": "Select nativo do navegador estilizado: ideal para formulários com Server Actions e listas longas.", "files": ["ui/native-select.tsx"] },
+    { "name": "select", "type": "registry:ui", "title": "Select", "description": "Select personalizado (Radix).", "files": ["ui/select.tsx"] },
+    { "name": "checkbox", "type": "registry:ui", "title": "Checkbox", "description": "Caixa de seleção.", "files": ["ui/checkbox.tsx"] },
+    { "name": "radio-group", "type": "registry:ui", "title": "RadioGroup", "description": "Grupo de opções exclusivas.", "files": ["ui/radio-group.tsx"] },
+    { "name": "switch", "type": "registry:ui", "title": "Switch", "description": "Interruptor liga/desliga.", "files": ["ui/switch.tsx"] },
+    { "name": "alert", "type": "registry:ui", "title": "Alert", "description": "Aviso em bloco com variantes default, info, success, warning e destructive.", "files": ["ui/alert.tsx"] },
+    { "name": "badge", "type": "registry:ui", "title": "Badge", "description": "Selo com variantes default, secondary, destructive, success, warning, info, outline, ghost e link.", "files": ["ui/badge.tsx"] },
+    { "name": "card", "type": "registry:ui", "title": "Card", "description": "Cartão com cabeçalho, conteúdo e rodapé.", "files": ["ui/card.tsx"] },
+    { "name": "skeleton", "type": "registry:ui", "title": "Skeleton", "description": "Espaço reservado durante o carregamento.", "files": ["ui/skeleton.tsx"] },
+    { "name": "empty", "type": "registry:ui", "title": "Empty", "description": "Estado vazio: ícone, título, descrição e ações.", "files": ["ui/empty.tsx"] },
+    { "name": "separator", "type": "registry:ui", "title": "Separator", "description": "Divisória horizontal ou vertical.", "files": ["ui/separator.tsx"] },
+
+    { "name": "dialog", "type": "registry:ui", "title": "Dialog", "description": "Diálogo modal.", "files": ["ui/dialog.tsx"] },
+    { "name": "alert-dialog", "type": "registry:ui", "title": "AlertDialog", "description": "Diálogo de confirmação para ações destrutivas.", "files": ["ui/alert-dialog.tsx"] },
+    { "name": "dropdown-menu", "type": "registry:ui", "title": "DropdownMenu", "description": "Menu suspenso com itens, grupos, caixas e submenus.", "files": ["ui/dropdown-menu.tsx"] },
+    { "name": "popover", "type": "registry:ui", "title": "Popover", "description": "Conteúdo flutuante ancorado.", "files": ["ui/popover.tsx"] },
+    { "name": "tooltip", "type": "registry:ui", "title": "Tooltip", "description": "Dica ao passar o ponteiro ou focar.", "files": ["ui/tooltip.tsx"],
+      "docs": "Envolva a aplicação com <TooltipProvider> (exportado pelo componente tooltip) no layout raiz." },
+    { "name": "tabs", "type": "registry:ui", "title": "Tabs", "description": "Abas.", "files": ["ui/tabs.tsx"] },
+    { "name": "sonner", "type": "registry:ui", "title": "Toaster", "description": "Notificações (sonner) que seguem o tema .dark, sem next-themes.", "files": ["ui/sonner.tsx"],
+      "docs": "Coloque <Toaster /> (exportado pelo componente sonner) uma vez no layout raiz e chame toast() do pacote \"sonner\"." },
+    { "name": "sheet", "type": "registry:ui", "title": "Sheet", "description": "Painel lateral sobreposto.", "files": ["ui/sheet.tsx"] },
+
+    { "name": "table", "type": "registry:ui", "title": "Table", "description": "Tabela com rolagem horizontal.", "files": ["ui/table.tsx"] },
+    { "name": "data-table", "type": "registry:ui", "title": "DataTable", "description": "Tabela de dados (TanStack Table 9): ordenação com aria-sort, busca sem acentos e paginação em pt-BR.", "files": ["ui/data-table.tsx"] },
+    { "name": "pagination", "type": "registry:ui", "title": "Pagination", "description": "Paginação por links.", "files": ["ui/pagination.tsx"] },
+    { "name": "breadcrumb", "type": "registry:ui", "title": "Breadcrumb", "description": "Trilha de navegação.", "files": ["ui/breadcrumb.tsx"] },
+    { "name": "sidebar", "type": "registry:ui", "title": "Sidebar", "description": "Barra lateral recolhível, com gaveta no celular (que devolve o foco ao fechar) e atalho Ctrl/Cmd+B.", "files": ["ui/sidebar.tsx"] },
+    { "name": "theme-switcher", "type": "registry:ui", "title": "ThemeSwitcher", "description": "Seletor Claro/Escuro/Sistema.", "files": ["ui/theme-switcher.tsx"] },
+
+    { "name": "app-shell", "type": "registry:block", "title": "AppShell", "description": "Estrutura de aplicação: barra lateral (a gaveta do celular fecha ao seguir um link), topo, link para pular ao conteúdo e seletor de tema.", "files": ["blocks/app-shell/app-shell.tsx"] }
+  ]
+}

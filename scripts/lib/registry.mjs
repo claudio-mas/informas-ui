@@ -1,5 +1,23 @@
 // Monta os itens do registro shadcn a partir de tokens/*.json.
+import { readFileSync } from 'node:fs';
 import { loadTokens, primitiveVar, semanticColorNames } from './tokens.mjs';
+
+const registryDir = new URL('../../registry/', import.meta.url);
+
+/**
+ * Versões das dependências npm dos componentes, por faixa de major (sem ^ nem ~:
+ * o CLI repassa o texto ao gerenciador de pacotes, e no cmd do Windows ^ é escape).
+ */
+export const NPM_VERSIONS = {
+  'radix-ui': '1',
+  cn: '0.5',
+  'class-variance-authority': '0.7',
+  'lucide-react': '1',
+  sonner: '2',
+  '@tanstack/react-table': '9',
+};
+const PEERS = new Set(['react', 'react-dom']);
+const FILE_TYPES = { ui: 'registry:ui', hooks: 'registry:hook', lib: 'registry:lib', blocks: 'registry:component' };
 
 const SCHEMA = 'https://ui.shadcn.com/schema/registry-item.json';
 const strip = name => name.replace(/^--/, '');
@@ -62,6 +80,53 @@ export function contrastItem(scriptContent, version) {
     description: `Script do informas-ui ${version} que verifica o contraste WCAG dos tokens semânticos no CSS do projeto, nos temas claro e escuro. Uso: node scripts/informas-contrast.mjs [arquivo.css ...]`,
     files: [{ path: 'scripts/informas-contrast.mjs', type: 'registry:file', target: '~/scripts/informas-contrast.mjs', content: scriptContent }],
   };
+}
+
+const packageName = spec => (spec.startsWith('@') ? spec.split('/').slice(0, 2).join('/') : spec.split('/')[0]);
+
+/** Lê o manifesto e monta os itens de componentes, derivando dependências dos imports. */
+export function componentItems(version) {
+  const { items } = JSON.parse(readFileSync(new URL('items.json', registryDir), 'utf8'));
+  const owner = new Map(items.flatMap(item => item.files.map(file => [file.replace(/\.tsx?$/, ''), item.name])));
+  return items.map(def => {
+    const dependencies = new Set();
+    const registryDependencies = new Set();
+    const files = def.files.map(rel => {
+      const content = readFileSync(new URL(`informas/${rel}`, registryDir), 'utf8');
+      for (const [, spec] of content.matchAll(/(?:from|import)\s+["']([^"']+)["']/g)) {
+        if (spec.startsWith('@/registry/informas/')) {
+          const target = owner.get(spec.slice('@/registry/informas/'.length));
+          if (!target) throw new Error(`${rel}: import ${spec} não pertence a nenhum item`);
+          if (target !== def.name) registryDependencies.add(`@informas/${target}`);
+        } else if (spec.startsWith('.') || spec.startsWith('@/')) {
+          throw new Error(`${rel}: use @/registry/informas/… em vez de ${spec}`);
+        } else if (!PEERS.has(packageName(spec))) {
+          const pkg = packageName(spec);
+          if (!NPM_VERSIONS[pkg]) throw new Error(`${rel}: dependência ${pkg} sem versão em NPM_VERSIONS`);
+          dependencies.add(`${pkg}@${NPM_VERSIONS[pkg]}`);
+        }
+      }
+      return { path: `registry/informas/${rel}`, type: FILE_TYPES[rel.split('/')[0]], content };
+    });
+    // Componentes dependem dos tokens: quem instalar um botão leva o tema junto.
+    if (def.type === 'registry:ui' || def.type === 'registry:block') registryDependencies.add('@informas/tema');
+    const item = { $schema: SCHEMA, name: def.name, type: def.type, title: def.title, description: def.description };
+    if (dependencies.size) item.dependencies = [...dependencies].sort();
+    if (registryDependencies.size) item.registryDependencies = [...registryDependencies].sort();
+    item.files = files;
+    if (def.docs) item.docs = def.docs;
+    return item;
+  });
+}
+
+/** CSS equivalente ao que o `shadcn add @informas/tema` escreve (para testes e catálogo). */
+const cssBlock = (selector, vars) => `${selector} {\n${Object.entries(vars).map(([k, v]) => `  --${k}: ${v};`).join('\n')}\n}\n`;
+const cssRules = (obj, indent = '') => Object.entries(obj).map(([sel, body]) => typeof body === 'string'
+  ? `${indent}${sel}: ${body};`
+  : `${indent}${sel} {\n${cssRules(body, indent + '  ')}\n${indent}}`).join('\n');
+export function installedThemeCss(theme, extra = '') {
+  return `@import "tailwindcss";\n\n@custom-variant dark (&:is(.dark *));\n\n${cssBlock('@theme inline', theme.cssVars.theme)}\n` +
+    `${cssBlock(':root', theme.cssVars.light)}\n${cssBlock('.dark', theme.cssVars.dark)}\n${cssRules(theme.css)}\n${extra}`;
 }
 
 export function registryIndex(items, version) {

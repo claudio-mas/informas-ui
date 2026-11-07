@@ -29,6 +29,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
+      - run: npx playwright install --with-deps chromium
+      # Catálogo com axe (WCAG 2.1 AA) nos dois temas e com as sobreposições abertas.
+      - run: npm run test:browser
 
       - name: Criar release
         env:

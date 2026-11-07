@@ -18,7 +18,8 @@ test('o índice lista os itens com o esquema do shadcn', () => {
   const indice = ler('registry.json');
   assert.equal(indice.$schema, 'https://ui.shadcn.com/schema/registry.json');
   assert.equal(indice.name, 'informas');
-  assert.deepEqual(indice.items.map(i => i.name), ['tema', 'contraste']);
+  const manifesto = JSON.parse(readFileSync(new URL('../registry/items.json', import.meta.url), 'utf8')).items.map(i => i.name);
+  assert.deepEqual(indice.items.map(i => i.name), ['tema', 'contraste', ...manifesto]);
   assert.equal(indice.version, JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version);
   for (const item of [tema, contraste]) assert.equal(item.$schema, 'https://ui.shadcn.com/schema/registry-item.json');
 });
@@ -64,4 +65,22 @@ test('o script verifica o CSS instalado, com e sem marca, e lê o components.jso
   writeFileSync(join(dir, 'components.json'), JSON.stringify({ tailwind: { css: 'globals.css' } }));
   const semArgs = spawnSync(process.execPath, [script], { cwd: dir, encoding: 'utf8' });
   assert.equal(semArgs.status, 0, semArgs.stdout + semArgs.stderr);
+});
+
+test('componentes: dependências derivadas dos imports, todos levam o tema e nada sobra do shadcn original', () => {
+  const indice = ler('registry.json');
+  const nomes = new Set(indice.items.map(i => i.name));
+  for (const { name } of indice.items.filter(i => !['tema', 'contraste'].includes(i.name))) {
+    const item = ler(`${name}.json`);
+    for (const dep of item.registryDependencies ?? []) assert.ok(nomes.has(dep.replace('@informas/', '')), `${name}: ${dep} existe no registro`);
+    if (['registry:ui', 'registry:block'].includes(item.type)) assert.ok(item.registryDependencies.includes('@informas/tema'), `${name} depende do tema`);
+    for (const dep of item.dependencies ?? []) assert.match(dep, /^(@[\w-]+\/)?[\w.-]+@[\d.]+$/, `${name}: ${dep} com faixa sem ^ (cmd do Windows)`);
+    for (const arquivo of item.files) {
+      assert.doesNotMatch(arquivo.content, /new-york-v4|from "next-themes"/, `${name}: resto do shadcn original`);
+      assert.doesNotMatch(arquivo.content, /ring-ring\/50|text-white|dark:bg-input\//, `${name}: classe sem ajuste aos tokens`);
+    }
+  }
+  const sidebar = ler('sidebar.json');
+  assert.equal(sidebar.cssVars, undefined, 'a sidebar não traz cssVars próprios (os tokens vêm do tema)');
+  assert.ok(ler('data-table.json').dependencies.includes('@tanstack/react-table@9'));
 });
