@@ -103,6 +103,13 @@ test("celular: barra lateral em gaveta e sem rolagem horizontal", async ({ page 
   await page.screenshot({ path: `${CAPTURAS}/celular-gaveta.png`, caret: "initial" })
   await page.keyboard.press("Escape")
   await expect(gaveta).toHaveCount(0)
+  // O foco volta ao botão que abriu a gaveta (o Sheet da sidebar não tem Dialog.Trigger).
+  await expect(page.getByRole("button", { name: "Alternar barra lateral" }).first()).toBeFocused()
+  // Seguir um link fecha a gaveta (em layouts persistentes ela ficaria aberta sobre a nova página).
+  await page.getByRole("button", { name: "Alternar barra lateral" }).first().click()
+  await gaveta.getByRole("link", { name: "Formulários" }).click()
+  await expect(gaveta).toHaveCount(0)
+  await expect(page).toHaveURL(/#formularios$/)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   await page.screenshot({ path: `${CAPTURAS}/celular.png`, fullPage: true, caret: "initial" })
 })

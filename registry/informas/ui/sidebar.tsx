@@ -41,6 +41,8 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
+  /** Para onde o foco volta quando a gaveta do celular fecha (informas-ui). */
+  returnFocusRef: React.RefObject<HTMLElement | null>
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -69,6 +71,9 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
+  // informas-ui: a gaveta do celular é um Sheet sem Dialog.Trigger, então o Radix não sabe
+  // a quem devolver o foco ao fechar e ele cairia no <body> (WCAG 2.4.3).
+  const returnFocusRef = React.useRef<HTMLElement | null>(null)
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
@@ -91,8 +96,12 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
+    if (isMobile && !openMobile && !returnFocusRef.current) {
+      // Aberta pelo atalho de teclado: volta para onde o foco estava.
+      returnFocusRef.current = document.activeElement as HTMLElement | null
+    }
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
-  }, [isMobile, setOpen, setOpenMobile])
+  }, [isMobile, openMobile, setOpen, setOpenMobile])
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -123,6 +132,7 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
+      returnFocusRef,
     }),
     [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
   )
@@ -164,7 +174,7 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile, returnFocusRef } = useSidebar()
 
   if (collapsible === "none") {
     return (
@@ -195,6 +205,14 @@ function Sidebar({
             } as React.CSSProperties
           }
           side={side}
+          onCloseAutoFocus={(event) => {
+            const target = returnFocusRef.current
+            returnFocusRef.current = null
+            if (target?.isConnected) {
+              event.preventDefault()
+              target.focus()
+            }
+          }}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Barra lateral</SheetTitle>
@@ -259,7 +277,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, returnFocusRef } = useSidebar()
 
   return (
     <Button
@@ -270,6 +288,8 @@ function SidebarTrigger({
       className={cn("size-7", className)}
       onClick={(event) => {
         onClick?.(event)
+        // O Safari não foca botões no clique: o gatilho se registra para receber o foco de volta.
+        returnFocusRef.current = event.currentTarget
         toggleSidebar()
       }}
       {...props}

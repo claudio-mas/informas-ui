@@ -4,6 +4,12 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 
 ## [Não lançado]
 
+## [2.0.0-alpha.3] — foco da gaveta
+
+### Corrigido
+- `sidebar`: ao fechar a gaveta do celular, o foco volta ao botão que a abriu, ou ao elemento focado antes do atalho Ctrl/Cmd+B. No shadcn/ui original ele cai no `<body>`, porque o `Sheet` da barra lateral não tem `Dialog.Trigger` (WCAG 2.4.3). `useSidebar()` expõe `returnFocusRef`.
+- `app-shell`: a gaveta do celular fecha ao seguir um link. Em layouts persistentes (Next.js) ela ficava aberta sobre a nova página.
+
 ## [2.0.0-alpha.2] — primeiro lote de componentes
 
 ### Adicionado
@@ -57,7 +63,8 @@ O projeto passa a se chamar **informas-ui** e deixa de ser um kit inspirado no O
 
 Última versão com o nome `cloudscape-ui`. Tokens `--cs-*`, 18 componentes React, temas Claro/Escuro/Sistema. Código preservado em `legacy/` e na tag `v1.1.0`.
 
-[Não lançado]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.2...HEAD
+[Não lançado]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.3...HEAD
+[2.0.0-alpha.3]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
 [2.0.0-alpha.2]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
 [2.0.0-alpha.1]: https://github.com/claudio-mas/informas-ui/compare/v2.0.0-alpha.0...v2.0.0-alpha.1
 [2.0.0-alpha.0]: https://github.com/claudio-mas/informas-ui/compare/v1.1.0...v2.0.0-alpha.0

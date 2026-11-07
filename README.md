@@ -7,7 +7,7 @@ Design system para aplicações web comerciais/SaaS, distribuído como **registr
 - **Tema para Tailwind CSS v4** com modo escuro pela classe `.dark` e seletor Claro/Escuro/Sistema.
 - **Verificação de contraste WCAG** do CSS do próprio projeto, incluindo a marca.
 
-> Fase atual: **2.0.0-alpha.2 (tokens e primeiro lote de componentes)**. A versão anterior (Cloudscape UI 1.1.0) está em [`legacy/`](legacy/).
+> Fase atual: **2.0.0-alpha.3 (tokens e primeiro lote de componentes)**. A versão anterior (Cloudscape UI 1.1.0) está em [`legacy/`](legacy/).
 
 ## Itens do registro
 
@@ -37,7 +37,7 @@ Requisitos: Tailwind CSS v4 e um `components.json`. Se o projeto não usa shadcn
   "tailwind": { "config": "", "css": "src/app/globals.css", "baseColor": "neutral", "cssVariables": true },
   "aliases": { "components": "@/components", "utils": "@/lib/utils", "ui": "@/components/ui", "lib": "@/lib", "hooks": "@/hooks" },
   "registries": {
-    "@informas": "https://github.com/claudio-mas/informas-ui/releases/download/v2.0.0-alpha.2/{name}.json"
+    "@informas": "https://github.com/claudio-mas/informas-ui/releases/download/v2.0.0-alpha.3/{name}.json"
   }
 }
 ```
@@ -83,7 +83,7 @@ Os arquivos vão para os aliases do `components.json` (por exemplo `@/components
 - **`Alert`** com variantes `info`, `success`, `warning` e `destructive` sobre os pares `*-subtle`. O `role` padrão é `alert` só em `destructive` e `warning`, e `status` nos demais; passe `role={undefined}` em avisos estáticos.
 - **`Badge`** com `success`, `warning` e `info`.
 - **`Toaster`** sem `next-themes`: segue a classe `.dark` do `<html>`.
-- **`Sidebar`** sem `cssVars` próprios: os tokens da barra lateral vêm do tema.
+- **`Sidebar`** sem `cssVars` próprios (os tokens vêm do tema), e a gaveta do celular devolve o foco ao botão que a abriu.
 - **`DataTable`** (não existe no shadcn), sobre o TanStack Table 9: `aria-sort` nos cabeçalhos, busca que ignora acentos ("sao paulo" encontra "São Paulo"), ordenação numérica correta com negativos (`sortFn: "numeric"`) e paginação em pt-BR.
 - **Textos** em pt-BR: "Fechar", "Anterior", "Próxima", "Alternar barra lateral", "Trilha de navegação"…
 - Cada arquivo derivado traz a atribuição ao shadcn/ui (MIT).

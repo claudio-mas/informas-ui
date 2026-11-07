@@ -1,6 +1,6 @@
 {
   "name": "informas-ui",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "private": true,
   "description": "Design system para aplicações web comerciais/SaaS, distribuído como registro shadcn: tokens neutros, 30 componentes acessíveis em pt-BR, tema para Tailwind CSS v4 e verificação de contraste WCAG.",
   "type": "module",

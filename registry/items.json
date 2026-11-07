@@ -37,9 +37,9 @@
     { "name": "data-table", "type": "registry:ui", "title": "DataTable", "description": "Tabela de dados (TanStack Table 9): ordenação com aria-sort, busca sem acentos e paginação em pt-BR.", "files": ["ui/data-table.tsx"] },
     { "name": "pagination", "type": "registry:ui", "title": "Pagination", "description": "Paginação por links.", "files": ["ui/pagination.tsx"] },
     { "name": "breadcrumb", "type": "registry:ui", "title": "Breadcrumb", "description": "Trilha de navegação.", "files": ["ui/breadcrumb.tsx"] },
-    { "name": "sidebar", "type": "registry:ui", "title": "Sidebar", "description": "Barra lateral recolhível, com gaveta no celular e atalho Ctrl/Cmd+B.", "files": ["ui/sidebar.tsx"] },
+    { "name": "sidebar", "type": "registry:ui", "title": "Sidebar", "description": "Barra lateral recolhível, com gaveta no celular (que devolve o foco ao fechar) e atalho Ctrl/Cmd+B.", "files": ["ui/sidebar.tsx"] },
     { "name": "theme-switcher", "type": "registry:ui", "title": "ThemeSwitcher", "description": "Seletor Claro/Escuro/Sistema.", "files": ["ui/theme-switcher.tsx"] },
 
-    { "name": "app-shell", "type": "registry:block", "title": "AppShell", "description": "Estrutura de aplicação: barra lateral, topo, link para pular ao conteúdo e seletor de tema.", "files": ["blocks/app-shell/app-shell.tsx"] }
+    { "name": "app-shell", "type": "registry:block", "title": "AppShell", "description": "Estrutura de aplicação: barra lateral (a gaveta do celular fecha ao seguir um link), topo, link para pular ao conteúdo e seletor de tema.", "files": ["blocks/app-shell/app-shell.tsx"] }
   ]
 }

@@ -11,6 +11,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/registry/informas/ui/sidebar"
 import { ThemeSwitcher } from "@/registry/informas/ui/theme-switcher"
 
@@ -29,6 +30,24 @@ type AppShellProps = {
   /** Chave da preferência de tema no localStorage (a mesma do themeScript). */
   themeStorageKey?: string
   children: React.ReactNode
+}
+
+/**
+ * No celular a barra lateral é uma gaveta. Em apps com layout persistente (Next.js), tocar num
+ * link não a desmonta: ela ficaria aberta sobre a nova página. Fecha ao seguir qualquer link.
+ */
+function CloseOnNavigate({ children }: { children: React.ReactNode }) {
+  const { isMobile, setOpenMobile } = useSidebar()
+  return (
+    <div
+      className="contents"
+      onClick={(event) => {
+        if (isMobile && (event.target as HTMLElement).closest("a[href]")) setOpenMobile(false)
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 
 /**
@@ -53,12 +72,14 @@ export function AppShell({
         Pular para o conteúdo
       </a>
       <Sidebar>
-        <SidebarHeader>{brand}</SidebarHeader>
-        <SidebarContent>{navigation}</SidebarContent>
-        <SidebarFooter>
-          {sidebarFooter}
-          <ThemeSwitcher storageKey={themeStorageKey} className="px-2 pb-2" />
-        </SidebarFooter>
+        <CloseOnNavigate>
+          <SidebarHeader>{brand}</SidebarHeader>
+          <SidebarContent>{navigation}</SidebarContent>
+          <SidebarFooter>
+            {sidebarFooter}
+            <ThemeSwitcher storageKey={themeStorageKey} className="px-2 pb-2" />
+          </SidebarFooter>
+        </CloseOnNavigate>
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
